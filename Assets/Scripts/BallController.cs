@@ -5,8 +5,8 @@ public class BallController : MonoBehaviour
 {
     [SerializeField] private float force = 1f;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private Transform ballAnchor;
 
-    // name booleans like a question
     private bool isBallLaunched;
     private Rigidbody ballRB;
     //private InputManager inputManager;
@@ -15,6 +15,9 @@ public class BallController : MonoBehaviour
     {
         ballRB = GetComponent<Rigidbody>();
         inputManager.OnSpacePressed.AddListener(LaunchBall);
+        transform.parent = ballAnchor;
+        transform.localPosition = Vector3.zero;
+        ballRB.isKinematic = true;
     }
 
     private void LaunchBall()
@@ -24,6 +27,8 @@ public class BallController : MonoBehaviour
         if (isBallLaunched) return;
         // "now that the ball is not launched, set it to true and launch the ball"
         isBallLaunched = true;
+        transform.parent = null; // this sets the object to the outermost layer of the hierarchy
+        ballRB.isKinematic = false;
         ballRB.AddForce(transform.forward * force, ForceMode.Impulse);
     }
 }
